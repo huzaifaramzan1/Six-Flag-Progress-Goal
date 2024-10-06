@@ -153,6 +153,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
 <script>
+     // Function to get a random number in a specified range
+     function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
     const goal = 23000000;
     const gathered = 23000000; // Change this value to test
     const progressPercentage = Math.min((gathered / goal) * 100, 100);
@@ -161,19 +166,20 @@
     progressBar.innerText = Math.floor(progressPercentage) + '%';
     document.getElementById('current-value').innerText = '$' + gathered.toLocaleString();
 
-    // Trigger confetti and sound on reaching the goal
+    // Prepare to trigger confetti and sound on reaching the goal
     if (gathered >= goal) {
         const duration = 15 * 1000,
               animationEnd = Date.now() + duration,
               defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
         const sound = document.getElementById('fireworks-sound');
-        sound.loop = true; // Set to loop
-        sound.play(); // Play sound once
-
-        function randomInRange(min, max) {
-            return Math.random() * (max - min) + min;
-        }
+        
+        // Event listener for user interaction
+        document.addEventListener('click', function playSound() {
+            sound.loop = true; // Set to loop
+            sound.play().catch(error => console.log('Error playing sound:', error)); // Handle playback error
+            document.removeEventListener('click', playSound); // Remove the event listener after the first click
+        });
 
         const interval = setInterval(function() {
             const timeLeft = animationEnd - Date.now();
@@ -197,6 +203,7 @@
             );
         }, 250);
     }
+    
 </script>
 
     <!-- Bootstrap JS and Dependencies -->
